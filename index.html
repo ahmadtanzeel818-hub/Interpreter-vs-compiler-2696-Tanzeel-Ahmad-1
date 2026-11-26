@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compiler vs. Interpreter — Complete Execution Guide</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <div class="brand">
+        <span class="pill">LANGUAGE RUNTIME</span>
+        <h1>Compiler vs. Interpreter</h1>
+      </div>
+      <nav class="nav-links">
+        <a href="#models">Execution Models</a>
+        <a href="#pipeline">Pipeline Simulator</a>
+        <a href="#matrix">Comparison</a>
+        <a href="#quiz">Quiz</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Overview -->
+    <section id="models" class="section">
+      <h2>How Source Code Becomes Machine Execution</h2>
+      <p class="lead">
+        CPUs execute raw machine instructions (binary opcodes), while developers write high-level source code. Compilers, interpreters, and hybrid Just-In-Time (JIT) runtimes bridge that gap with distinct trade-offs in speed, portability, debugging, and startup latency.
+      </p>
+
+      <div class="grid-3">
+        <article class="card">
+          <h3 class="c-blue">⚙️ Compiler (AOT)</h3>
+          <p>Translates the entire source program ahead of time into native machine code or an executable binary before running it.</p>
+          <ul class="mini-list">
+            <li><strong>Examples:</strong> C, C++, Rust, Go</li>
+            <li><strong>Strength:</strong> High runtime throughput &amp; deep static optimization</li>
+            <li><strong>Trade-off:</strong> Slower edit-compile-run cycle; platform-specific binaries</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="c-emerald">🔁 Interpreter</h3>
+          <p>Reads, parses, and executes source statements or bytecode instructions directly on the fly without producing a standalone native binary.</p>
+          <ul class="mini-list">
+            <li><strong>Examples:</strong> Traditional shells, classic scripts, pure interpreters</li>
+            <li><strong>Strength:</strong> Fast startup, REPL interactivity, easier dynamic behavior</li>
+            <li><strong>Trade-off:</strong> Higher per-instruction execution overhead at runtime</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 class="c-amber">🚀 Hybrid / Bytecode + JIT</h3>
+          <p>Compiles source to portable bytecode first, then interprets it and compiles "hot" loops into native machine code at runtime.</p>
+          <ul class="mini-list">
+            <li><strong>Examples:</strong> Java (JVM), C# (.NET CLR), JavaScript (V8), Python (CPython)</li>
+            <li><strong>Strength:</strong> Cross-platform bytecode + near-native hot-path speed</li>
+            <li><strong>Trade-off:</strong> Warm-up time and higher memory footprint</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Interactive Pipeline Simulator -->
+    <section id="pipeline" class="section">
+      <div class="section-head">
+        <h2>Interactive Execution Pipeline Simulator</h2>
+        <p>Choose a runtime mode, test valid or syntax-error code, and step through how each stage processes your program.</p>
+      </div>
+
+      <div class="sim-grid">
+        <div class="card">
+          <div class="controls-row">
+            <label for="mode-select">Execution Model:</label>
+            <select id="mode-select" class="select">
+              <option value="compiler">Compiler (AOT)</option>
+              <option value="interpreter">Interpreter (Line-by-Line)</option>
+              <option value="jit">Hybrid (Bytecode + JIT)</option>
+            </select>
+          </div>
+
+          <div class="preset-row">
+            <button type="button" class="btn-ghost" id="preset-valid">Load Valid Sample</button>
+            <button type="button" class="btn-ghost" id="preset-error">Load Syntax Error Sample</button>
+          </div>
+
+          <label for="code-input" class="field-label">Source Code</label>
+          <textarea id="code-input" class="code-editor" rows="7" spellcheck="false">let total = 0;
+for (let i = 1; i &lt;= 5; i++) {
+  total = total + i * 2;
+}
+print(total);</textarea>
+
+          <div class="sim-actions">
+            <button type="button" class="btn-primary" id="run-sim-btn">Run Pipeline</button>
+            <button type="button" class="btn-secondary" id="step-btn">Step Forward</button>
+            <button type="button" class="btn-ghost" id="reset-sim-btn">Reset</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="stage-title">Pipeline Stages &amp; Runtime Output</h3>
+          <ol id="stage-list" class="stage-list"></ol>
+          <div class="output-box">
+            <div class="output-header">Runtime Output / Diagnostics</div>
+            <pre id="sim-output" class="output-pre">Click "Run Pipeline" or "Step Forward" to inspect execution.</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison Matrix -->
+    <section id="matrix" class="section">
+      <div class="section-head">
+        <h2>Side-by-Side Comparison Matrix</h2>
+        <p>Key architectural differences engineers weigh when choosing languages and runtimes.</p>
+      </div>
+
+      <div class="card table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>Compiled (AOT)</th>
+              <th>Interpreted</th>
+              <th>Bytecode + JIT Hybrid</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Translation Timing</strong></td>
+              <td>Before execution (build step)</td>
+              <td>During execution (statement by statement)</td>
+              <td>Bytecode pre-built; hot paths compiled at runtime</td>
+            </tr>
+            <tr>
+              <td><strong>Error Detection</strong></td>
+              <td>Syntax &amp; type errors caught upfront before run</td>
+              <td>Errors surface when execution reaches the faulty line</td>
+              <td>Syntax/bytecode verified early; runtime/deopt checks during run</td>
+            </tr>
+            <tr>
+              <td><strong>Execution Speed</strong></td>
+              <td>Very fast (direct native instructions)</td>
+              <td>Slower (interpreter dispatch per operation)</td>
+              <td>Fast after warm-up via runtime profiling &amp; native codegen</td>
+            </tr>
+            <tr>
+              <td><strong>Portability</strong></td>
+              <td>Target OS + CPU architecture specific</td>
+              <td>Portable wherever interpreter runs</td>
+              <td>Portable bytecode across VM targets</td>
+            </tr>
+            <tr>
+              <td><strong>Startup Latency</strong></td>
+              <td>Near-instant once compiled</td>
+              <td>Very fast startup</td>
+              <td>Moderate startup + JIT warm-up overhead</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Knowledge Check Quiz -->
+    <section id="quiz" class="section">
+      <div class="section-head">
+        <h2>Runtime Concepts Quiz</h2>
+        <p>Test your understanding of compilation, interpretation, and hybrid runtimes.</p>
+      </div>
+
+      <div class="card quiz-box">
+        <div class="quiz-meta">
+          <span id="q-counter">Question 1 of 4</span>
+          <span id="q-score">Score: 0</span>
+        </div>
+        <h3 id="q-text" class="q-text"></h3>
+        <div id="q-options" class="q-options"></div>
+        <div id="q-feedback" class="q-feedback hidden"></div>
+        <button type="button" class="btn-primary hidden" id="q-next">Next Question</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Compiler vs. Interpreter Interactive Guide • HTML, CSS &amp; Vanilla JavaScript</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
